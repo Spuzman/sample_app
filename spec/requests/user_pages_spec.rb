@@ -71,8 +71,16 @@ describe "User pages" do
     describe "microposts" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
-      it { should have_content(user.microposts.count) }
+      it { should have_content(pluralize(user.microposts.count, "micropost")) }
     end
+    
+    describe "pagination" do
+      it "should paginate the feed" do
+       30.times { FactoryGirl.create(:micropost, user: user, content: "Consectetur adipiscing elit") }
+       visit root_path
+    page.should have_selector("div.pagination")
+  end
+end
   end
 
   describe "signup" do
